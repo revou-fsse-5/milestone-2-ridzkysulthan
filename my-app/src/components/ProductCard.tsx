@@ -5,7 +5,7 @@ interface ProductCardProps {
   name: string;
   price: number;
   imageUrl: string;
-  onAddToCart: () => void; // Add prop for adding to cart
+  onAddToCart: () => void; 
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ id, name, price, imageUrl, onAddToCart }) => {

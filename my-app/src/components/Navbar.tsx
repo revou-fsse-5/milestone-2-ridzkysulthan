@@ -19,7 +19,7 @@ const Navbar: React.FC = () => {
   };
 
   const handleLogoClick = () => {
-    // Check if the current path is not '/products'
+
     if (location.pathname !== '/products') {
       navigate('/products');
     }

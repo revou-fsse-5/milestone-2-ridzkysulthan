@@ -94,7 +94,6 @@ const CheckoutPage: React.FC = () => {
             {showSuccess && (
               <div className="mt-4 p-4 bg-green-100 text-green-800 rounded">
                 <p>Your Order was successful!</p>
-                {/* The redirect happens automatically, so no need for a button here */}
               </div>
             )}
           </div>

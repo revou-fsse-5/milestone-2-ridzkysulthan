@@ -9,14 +9,14 @@ interface CartPopupProps {
 
 const CartPopup: React.FC<CartPopupProps> = ({ cart }) => {
   const { updateCartItemQuantity, removeFromCart } = useCart();
-  const navigate = useNavigate(); // Add this hook for navigation
+  const navigate = useNavigate(); 
 
   const handleQuantityChange = (id: number, quantity: number) => {
     updateCartItemQuantity(id, quantity);
   };
 
   const handleCheckout = () => {
-    navigate('/checkout'); // Navigate to the Checkout page
+    navigate('/checkout'); 
   };
 
   return (
@@ -63,7 +63,7 @@ const CartPopup: React.FC<CartPopupProps> = ({ cart }) => {
       )}
       <div className="p-4 border-t">
         <button
-          onClick={handleCheckout} // Attach the handler for navigation
+          onClick={handleCheckout}
           className="w-full bg-blue-500 text-white py-2 rounded-md"
         >
           Go to Checkout
