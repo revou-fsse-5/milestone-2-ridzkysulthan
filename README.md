@@ -4,7 +4,7 @@
 
 #### By Ridzky Sulthan
 
-[Link to site]()
+[Link to site](https://easyshop-ridzky.netlify.app/)
 
 ## Dependencies
 
