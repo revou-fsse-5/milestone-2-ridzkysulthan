@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
@@ -12,15 +12,18 @@ const validationSchema = Yup.object({
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const [notification, setNotification] = useState<string | null>(null);
 
   const handleSubmit = async (values: { email: string; password: string }) => {
     try {
       await login(values.email, values.password);
-      alert('Login successful!');
-      navigate('/products');
+      setNotification('Login successful!');
+      setTimeout(() => {
+        navigate('/products');
+      }, 1500);
     } catch (error) {
       console.error('Login failed', error);
-      alert('Login failed. Please check your credentials and try again.');
+      setNotification('Login failed. Please check your credentials and try again.');
     }
   };
 
@@ -35,6 +38,7 @@ const LoginPage: React.FC = () => {
           {() => (
             <Form className="flex flex-col items-center p-6 border rounded shadow bg-white">
               <h1 className="text-2xl mb-6">Login</h1>
+              {notification && <p className="text-green-500 mb-4">{notification}</p>}
               <div className="w-full mb-4">
                 <Field
                   type="email"
