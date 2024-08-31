@@ -1,49 +1,44 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import axios from 'axios';
 
-const API_URL = 'https://api.escuelajs.co/api/v1';
-
-interface AuthContextProps {
+interface AuthContextType {
   isAuthenticated: boolean;
+  user: any;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  register: (email: string, password: string, username: string) => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextProps | undefined>(undefined);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!localStorage.getItem('access_token'));
+  const [user, setUser] = useState<any>(JSON.parse(localStorage.getItem('user') || '{}'));
 
   const login = async (email: string, password: string) => {
-    try {
-      const { data } = await axios.post(`${API_URL}/auth/login`, { email, password });
-      localStorage.setItem('accessToken', data.access_token);
-      localStorage.setItem('refreshToken', data.refresh_token);
-      setIsAuthenticated(true);
-    } catch (error) {
-      console.error('Login failed', error);
-      throw error;
-    }
-  };
 
-  const register = async (email: string, password: string) => {
-    try {
-      await login(email, password);
-    } catch (error) {
-      console.error('Registration failed', error);
-      throw error;
-    }
+    localStorage.setItem('access_token', 'your_access_token');
+    localStorage.setItem('user', JSON.stringify({ email, username: 'User', avatar: 'avatar_url' }));
+    setIsAuthenticated(true);
+    setUser(JSON.parse(localStorage.getItem('user') || '{}'));
   };
 
   const logout = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('user');
     setIsAuthenticated(false);
+    setUser({});
+  };
+
+  const register = async (email: string, password: string, username: string) => {
+
+    localStorage.setItem('access_token', 'your_access_token');
+    localStorage.setItem('user', JSON.stringify({ email, username, avatar: 'avatar_url' }));
+    setIsAuthenticated(true);
+    setUser(JSON.parse(localStorage.getItem('user') || '{}'));
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, register, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );
@@ -51,7 +46,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;

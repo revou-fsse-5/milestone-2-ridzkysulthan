@@ -8,9 +8,10 @@ import { CartItem } from '../types/types';
 import logo from '../assets/logo.png';
 
 const Navbar: React.FC = () => {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
   const { cart } = useCart();
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState<boolean>(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -19,10 +20,18 @@ const Navbar: React.FC = () => {
   };
 
   const handleLogoClick = () => {
-
     if (location.pathname !== '/products') {
       navigate('/products');
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
+  const toggleProfileMenu = () => {
+    setIsProfileMenuOpen(!isProfileMenuOpen);
   };
 
   return (
@@ -46,13 +55,31 @@ const Navbar: React.FC = () => {
         <Link to="/products" className="mr-4 flex items-center">
           Products
         </Link>
+        <span className="mx-2 text-gray-400">|</span>
         {isAuthenticated ? (
-          <>
-            <button onClick={logout} className="bg-red-500 p-2 rounded flex items-center">
-              <FaUser className="mr-1" />
-              Logout
+          <div className="relative flex items-center">
+            <button onClick={toggleProfileMenu} className="flex items-center mr-4">
+              <img
+                src={user.avatar || 'https://via.placeholder.com/50'}
+                alt="User Avatar"
+                className="w-8 h-8 rounded-full mr-2"
+              />
+              <span>{user.username || 'User'}</span>
             </button>
-          </>
+            {isProfileMenuOpen && (
+              <div className="absolute top-12 right-0 bg-white text-black shadow-lg rounded-md p-2">
+                <Link to="/profile" className="block px-4 py-2 hover:bg-gray-200">
+                  Profile
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-4 py-2 hover:bg-gray-200"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
         ) : (
           <>
             <Link to="/login" className="mr-4 flex items-center">
