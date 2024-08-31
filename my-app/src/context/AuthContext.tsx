@@ -17,9 +17,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await axios.post(`${API_URL}/auth/login`, { email, password });
-      localStorage.setItem('accessToken', response.data.access_token);
-      localStorage.setItem('refreshToken', response.data.refresh_token);
+      const { data } = await axios.post(`${API_URL}/auth/login`, { email, password });
+      localStorage.setItem('accessToken', data.access_token);
+      localStorage.setItem('refreshToken', data.refresh_token);
       setIsAuthenticated(true);
     } catch (error) {
       console.error('Login failed', error);
@@ -29,7 +29,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const register = async (email: string, password: string) => {
     try {
-      const response = await axios.post(`${API_URL}/auth/register`, { email, password });
+      await axios.post(`${API_URL}/auth/register`, { email, password });
       await login(email, password);
     } catch (error) {
       console.error('Registration failed', error);
